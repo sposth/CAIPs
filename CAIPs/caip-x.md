@@ -111,7 +111,7 @@ Deterministic based on the `<capHash>`.
 
 #### Deactivate
 
-
+In order to deactivate a 3ID all capabilities will need to be revoked. This can be done in a single update. Note however that for an observer resolving the DID it's not possible to determine if the DID is deactivated or not since it's impossible to know if there are capabilites that have yet to be revoked.
 
 ### Object Capabilities 
 
@@ -179,12 +179,12 @@ type HAMT<CapHash:Value>
 ```
 
 1. create capHash genesis -> h0
-2. build kv-store with only h0
+2. Put h0 into HAMT (build kv-store with only h0)
 3. grant new capHash -> h1
-4. add h1 to kv-store
-5. create writeEvent
+4. Put h1 into HAMT (add h1 to kv-store)
+5. Create writeEvent for HAMT root
 6. Anchor write event
-7. update h1 value in kv-store to include `createTime`
+7. Update h1 value in HAMT to include `createTime`
 
 If there are two writes before anchor:
 
@@ -195,11 +195,11 @@ If there are two writes before anchor:
 
 #### Multihash verification method property
 
-
+For did-spec-registries registration
 
 #### CapHash
 
-
+For did-spec-registries registration
 
 #### CapGrok "3" namespace
 
