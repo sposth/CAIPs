@@ -15,7 +15,7 @@ A Chain Agnostic CApability Object, or CACAO, is an [IPLD](https://ipld.io) repr
 
 ## Abstract
 
-CACAO proposes a way to leverage [varsig](https://github.com/ChainAgnostic/varsig) and [multidid](https://github.com/ChainAgnostic/multidid/) as well as IPLD to create a common representation for various different object-capability formats, such as SIWE and UCAN. The IPLD representation contains common fields shared between these format. In addition this CAIP also registers varsig codes for both SIWE + ReCap and UCAN. 
+CACAO proposes a way to leverage [varsig](https://github.com/ChainAgnostic/varsig) and [multidid](https://github.com/ChainAgnostic/multidid/) as well as IPLD to create a common representation for various different object-capability formats, such as SIWE and UCAN. The IPLD representation contains common fields shared between these formats. In addition this CAIP also registers varsig codes for both SIWE + ReCap and UCAN. 
 
 ## Motivation
 
@@ -31,7 +31,7 @@ The container schema described SHOULD be encoded using the `dag-cbor` IPLD codec
 
 ```verilog
 
-type Prinicpal Bytes // a multidid
+type Principal Bytes // a multidid
 type Varsig Bytes
 type Resource String // URL
 type Ability String // e.g. crud/create
@@ -58,7 +58,7 @@ type CACAO struct {
 
 ```
 
-Important to note is that in the `Abilitiy` array, every `NB` are treated as separate. For example,
+Important to note is that in the `Ability` array, every `NB` are treated as separate. For example,
 
 ```json
 "crud/create": [
@@ -83,7 +83,7 @@ This section describes how to convert different object-capability formats into t
 
 The following values can be easily translated from the SIWx (CAIP-122) specification:
 
-* `iss` - a multidid encoded DID PKH constructued using `address` and `chain-id`
+* `iss` - a multidid encoded DID PKH constructed using `address` and `chain-id`
 * `aud` - a multidid encoded DID based on `uri`
 * `v` - set to `version`
 * `nnc` - set to `nonce`
@@ -178,11 +178,11 @@ Other formats can be added similarly to the examples above by registering a `con
 
 ### Signature Verification
 
-To verify a signature of a CACAO the varsig specification is followed. Before verifying the signature the `content_multicodec` must be used to compute the digest used by the hash function and signature verification algorithm. Below the `content_multicodec` is described for `0xd510`, `0xd51e`, and `0xd001`.
+To verify a signature of a CACAO the varsig specification is followed. Before verifying the signature, the `content_multicodec` must be used to compute the digest used by the hash function and signature verification algorithm. Below the `content_multicodec` is described for `0xd510`, `0xd51e`, and `0xd001`.
 
 #### Content encoding: SIWx + ReCap
 
-In order to verify the signature we first need to reconstruct the message that was signed. For *caip122-eip191* (`0xd51e`) and *caip122* (`0xd510`) we can start with the shared steps.
+In order to verify the signature, we first need to reconstruct the message that was signed. For *caip122-eip191* (`0xd51e`) and *caip122* (`0xd510`) we can start with the shared steps.
 
 **Reconstruct ReCap data**
 
@@ -265,13 +265,13 @@ Stringify the protected header json object and encode it using base64url.
 For transport purposes a CACAO can be passed inside a base64url-serialized [CAR](https://ipld.io/specs/transport/car/) file,
 with root of the CAR file set to a tip of capability chain. Here and now we use [CARv1](https://ipld.io/specs/transport/car/carv1/) format, as [CARv2](https://ipld.io/specs/transport/car/carv2/) is still being worked on.
 
-We propose, that all the necessary parent CACAOs are passed there as well. This way, even if a referenced CACAO is not yet available over IPFS, both consumer and presenter of CACAO still can access it.
+We propose that all the necessary parent CACAOs are passed there as well. This way, even if a referenced CACAO is not yet available over IPFS, both consumer and presenter of CACAO still can access it.
 
 ## Rationale
 
 A common way to represent multiple different types of capabilities can enable more interoperability between object-capability systems and establishes a common ground for further innovation. CACAO relies on existing standards, such as DIDs and multicodec as a base layer for this interoperability.
 
-Using IPLD as a represetation layer allows CACAO to easily be transfered over the internet, using IPFS or other protocols that can leverage its integrity checks.
+Using IPLD as a representation layer allows CACAO to easily be transfered over the internet, using IPFS or other protocols that can leverage its integrity checks.
 
 We choose SIWx + ReCap and UCAN as examples since they represent a majority of the existing object-capabilities in use in the blockchain community today.
 
@@ -325,7 +325,7 @@ CACAO Serialized: base64url-encoded CARv1 file with the IPLD block of the CACAO 
 uOqJlcm9vdHOB2CpYJQABcRIgEbxa4r0lKwE4Oj8ZUbYCpULmPfgw2g_r12IcKX1CxNlndmVyc2lvbgHdBAFxEiARvFrivSUrATg6PxlRtgKlQuY9-DDaD-vXYhwpfULE2aNhaKFhdGdlaXA0MzYxYXCrY2F1ZHgbaHR0cDovL2xvY2FsaG9zdDozMDAwL2xvZ2luY2V4cHgdMjAyMi0wMy0xMFQxODowOToyMS40ODErMDM6MDBjaWF0eB0yMDIyLTAzLTEwVDE3OjA5OjIxLjQ4MSswMzowMGNpc3N4O2RpZDpwa2g6ZWlwMTU1OjE6MHhCQWM2NzVDMzEwNzIxNzE3Q2Q0QTM3RjZjYmVBMUYwODFiMUMyYTA3Y25iZngdMjAyMi0wMy0xMFQxNzowOToyMS40ODErMDM6MDBlbm9uY2VmMzI4OTE3ZmRvbWFpbm5sb2NhbGhvc3Q6MzAwMGd2ZXJzaW9uAWlyZXF1ZXN0SWRxcmVxdWVzdC1pZC1yYW5kb21pcmVzb3VyY2VzgnhCaXBmczovL2JhZnliZWllbXhmNWFiandqYmlrb3o0bWMzYTNkbGE2dWFsM2pzZ3BkcjRjanIzb3ozZXZmeWF2aHdxeCZodHRwczovL2V4YW1wbGUuY29tL215LXdlYjItY2xhaW0uanNvbmlzdGF0ZW1lbnR4QUkgYWNjZXB0IHRoZSBTZXJ2aWNlT3JnIFRlcm1zIG9mIFNlcnZpY2U6IGh0dHBzOi8vc2VydmljZS5vcmcvdG9zYXOiYXNYQVzLE0rT2HTLtAoys5lUnNMslT3F3IfcZGJKPj3AaE19SDMEPdfp9KaJSFP43FVfl7x-PH3T_MZkCeuYK_86RGcbYXRmZWlwMTkx
 ```
 
-### <a name="appendix-a"></a>Appendix A: Timestamp converstion algorithm
+### <a name="appendix-a"></a>Appendix A: Timestamp conversion algorithm
 
 The values in SIWx are encoded as [RFC3339](https://datatracker.ietf.org/doc/html/rfc3339#section-5.6) strings, while CACAO requires unix timestamps (in seconds). The algorithm used to convert between the two is outlined below.
 
